@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  immich-server:
+    container_name: immich_server
+    image: ghcr.io/immich-app/immich-server:release
+    ports:
+      - "2283:2283"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /mnt/immich_data/library:/usr/src/app/upload
+    environment:
+      - DB_HOSTNAME=database
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=immich_db_pass_2026
+      - DB_DATABASE_NAME=immich
+      - REDIS_HOSTNAME=redis
+    depends_on:
+      - redis
+      - database
+    restart: always
+
+  immich-machine-learning:
+    container_name: immich_machine_learning
+    image: ghcr.io/immich-app/immich-machine-learning:release
+    volumes:
+      - /mnt/immich_data/model-cache:/cache
+    restart: always
+
+  redis:
+    container_name: immich_redis
+    image: docker.io/redis:6.2-alpine
+    restart: always
+
+  database:
+    container_name: immich_postgres
+    image: docker.io/pgvector/pgvector:pg14
+    environment:
+      - POSTGRES_PASSWORD=immich_db_pass_2026
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=immich
+      - POSTGRES_INITDB_ARGS='--data-checksums'
+    volumes:
+      - /mnt/immich_data/pg_data:/var/lib/postgresql/data
+    restart: always
