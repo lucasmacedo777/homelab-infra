@@ -1,0 +1,6 @@
+# Procedimento Operacional: Gerenciamento de Storage e LVM
+
+Este documento detalha as intervenções realizadas para contornar problemas de alocação de blocos no Proxmox e Ubuntu Server.
+
+## 1. Expansão Online de Volume Lógico (Hot Resize)
+Quando o vDisk do Proxmox possui espaço não alocado na partição LVM:
