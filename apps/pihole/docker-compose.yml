@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  pihole:
+    image: pihole/pihole:latest
+    restart: always
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "8053:80/tcp"
+    environment:
+      - TZ=America/Sao_Paulo
+      - WEBPASSWORD=######
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    volumes:
+      - pihole_data:/etc/pihole
+      - dnsmasq_data:/etc/dnsmasq.d
+    networks:
+      - proxy_net
+
+volumes:
+  pihole_data:
+  dnsmasq_data:
+
+networks:
+  proxy_net:
+    external: true
